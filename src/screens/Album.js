@@ -1,9 +1,12 @@
-import React,{useEffect} from 'react'
-import { View, Text, SafeAreaView, Platform, FlatList } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { View, Text, SafeAreaView, Platform, FlatList,Dimensions } from 'react-native'
 import Header from '../components/Header'
 import AlbumList from '../components/album/AlbumList'
+import LottieView from 'lottie-react-native'
+import { useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 
-const api_key='MDY2ZGZlODItMjQxZC00ZmMzLWI1MzAtYjVkMTcwZTYyZDhm'
+const api_key = 'MDY2ZGZlODItMjQxZC00ZmMzLWI1MzAtYjVkMTcwZTYyZDhm'
 const Data = [
     {
         "type": "album",
@@ -19,7 +22,7 @@ const Data = [
         "discCount": 1,
         "trackCount": 18,
         "artistName": "Ed Sheeran"
-    }, 
+    },
     {
         "type": "album",
         "id": "alb.245806615",
@@ -37,27 +40,31 @@ const Data = [
 ]
 
 
-
-const renderItem = ({ item }) => {
-    return (
-      <AlbumList item={item} />
-    );}
-
 export default function Album() {
 
+    const dispatch = useDispatch();
+    const [loader, setLoader] = useState(false)
+    const albumsList = useSelector((state) => state.albumReducer.albums)
     const getTopAlbumsFromNapster = () => {
         const napsterurl = `https://api.napster.com/v2.2/albums/top?apikey=${api_key}&offset=20`;
         return fetch(napsterurl)
-        .then(res => res.json())
-        .then(json => setRestaurantData(json.businesses.filter((business) =>
-            business.transactions.includes(activeTab.toLowerCase()))))//setRestaurantData(json.businesses)
+            .then(res => res.json())
+            .then(json => 
+                dispatch({
+                    type: 'FETCH_ALBUM_SUCCESS',
+                    payload: json.albums
+                }))//setRestaurantData(json.businesses)
     }
-    
-    // useEffect(() => {
-    //     getRestaurantsFromYelp();
-    // }, [])// this hook will execute whenever the value of the state "City" and "activeTab"is changed.
-    
-    
+
+    useEffect(() => {
+        setLoader(true)
+        getTopAlbumsFromNapster();
+        setTimeout(() => {
+            setLoader(false)
+        }, 3000);
+    }, [])// this hook will execute whenever the value of the state "City" and "activeTab"is changed.
+
+
     return (
         // flex:0 is used to make the screen full and hide the bootom of the safeareaview
         // or we can skipp mentioning the flex property itself
@@ -66,20 +73,33 @@ export default function Album() {
             <View style={{ marginHorizontal: 10, backgroundColor: 'white', height: 150 }}>
                 <Header></Header>
             </View>
-            
+            {/* {console.warn(albumsList[0]['name'])} */}
             <View style={{ backgroundColor: '#F0F3F4' }}>
-                <View style={{ marginHorizontal: 30,paddingVertical:10 }}>
+                <View style={{ marginHorizontal: 30, paddingVertical: 10 }}>
                     <Text style={{ fontSize: 25, fontWeight: '700' }}>Albums </Text>
-                    
                 </View>
             </View>
 
-            <View style={{margin:5,alignSelf:'center'}}>
+            <View style={{ height: '100%', margin: 5, alignSelf: 'center' }}>
+                {
+                    loader ?
+                        
+                            <LottieView
+                                style={{ height: Dimensions.get('window').height/2 }}
+                                source={require("../assets/animations/music-spectrum.json")}
+                                autoPlay
+                                speed={1}
+                            />
+                      
+
+                        :
                         <FlatList
                             data={Data}
-                            renderItem={({ item }) => <AlbumList item={item}  />}
+                            renderItem={({ item }) => <AlbumList item={item} dummy={albumsList[0]} apikey={api_key}/>}
                             keyExtractor={item => item.artistName}
                         />
+                }
+
             </View>
 
         </SafeAreaView>
