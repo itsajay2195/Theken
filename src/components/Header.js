@@ -18,7 +18,7 @@ export default function HeaderTabs() {
                     </View>
                 </View>
 
-                <Text>Hi</Text>
+                <Text></Text>
             </View>
 
             <View style={{ marginHorizontal:20}}>

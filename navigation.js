@@ -6,6 +6,7 @@ import AlbumDetails from './src/screens/AlbumDetails'
 import Music from './src/screens/Music'
 import { Provider } from 'react-redux'
 import configureStore from './src/redux/store'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 const store =configureStore()
 
@@ -28,7 +29,7 @@ export default function RootNavigation() {
                         component={AlbumDetails}
                         screenOptions={screenOptions}
                         options={{
-                            title: '', headerBackImage: () => <MaterialCommunityIcons name="arrow-left" size={25} color="#fff" />,
+                            title: '', headerBackImage: () => <MaterialCommunityIcons name="arrow-left" size={25} color="white" />,
                             headerBackTitleVisible: false
                         }} />
                     <Stack.Screen name='Music' component={Music} options={{ title: '' }} />

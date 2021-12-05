@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux'
 
 const api_key = 'MDY2ZGZlODItMjQxZC00ZmMzLWI1MzAtYjVkMTcwZTYyZDhm'
 
-export default function Album() {
+export default function Album({navigation}) {
 
     const dispatch = useDispatch();
     const [loader, setLoader] = useState(false)
@@ -80,7 +80,7 @@ export default function Album() {
                             style={{ height: Dimensions.get('window').height / 2 }}
                             source={require("../assets/animations/music-spectrum.json")}
                             autoPlay
-                            speed={1}
+                            speed={0.5}
                         />
 
 
@@ -88,7 +88,8 @@ export default function Album() {
 
                         <FlatList
                             data={albumsList}
-                            renderItem={({ item }) => <AlbumList item={item} apikey={api_key} />}
+                            renderItem={({ item }) => <AlbumList item={item} apikey={api_key} navigation={navigation} />}
+                            showsVerticalScrollIndicator={false}
                             keyExtractor={item => item.id}
                             onEndReached={loadMore}
                             onEndReachedThreshold={0}
