@@ -94,7 +94,7 @@ export default function Album() {
 
                         :
                         <FlatList
-                            data={Data}
+                            data={albumsList}
                             renderItem={({ item }) => <AlbumList item={item} dummy={albumsList[0]} apikey={api_key}/>}
                             keyExtractor={item => item.artistName}
                         />
