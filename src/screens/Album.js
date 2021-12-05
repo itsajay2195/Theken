@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, SafeAreaView, Platform, FlatList,Dimensions } from 'react-native'
+import { View, Text, SafeAreaView, Platform, FlatList, Dimensions, ActivityIndicator } from 'react-native'
 import Header from '../components/Header'
 import AlbumList from '../components/album/AlbumList'
 import LottieView from 'lottie-react-native'
@@ -7,102 +7,144 @@ import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
 
 const api_key = 'MDY2ZGZlODItMjQxZC00ZmMzLWI1MzAtYjVkMTcwZTYyZDhm'
-const Data = [
-    {
-        "type": "album",
-        "id": "alb.245806615",
-        "upc": "602557261684",
-        "shortcut": "post-malone/stoney-deluxe",
-        "href": "https://api.napster.com/v2.2/albums/alb.245806615",
-        "name": "Stoney (Deluxe)",
-        "released": "2016-12-09T00:00:00.000Z",
-        "originallyReleased": "2016-12-09T00:00:00.000Z",
-        "label": "Universal Records",
-        "copyright": "℗ 2016 Republic Records, a division of UMG Recordings, Inc.",
-        "discCount": 1,
-        "trackCount": 18,
-        "artistName": "Ed Sheeran"
-    },
-    {
-        "type": "album",
-        "id": "alb.245806615",
-        "upc": "602557261684",
-        "shortcut": "post-malone/stoney-deluxe",
-        "href": "https://api.napster.com/v2.2/albums/alb.245806615",
-        "name": "Stoney (Deluxe)",
-        "released": "2016-12-09T00:00:00.000Z",
-        "originallyReleased": "2016-12-09T00:00:00.000Z",
-        "label": "Universal Records",
-        "copyright": "℗ 2016 Republic Records, a division of UMG Recordings, Inc.",
-        "trackCount": 18,
-        "artistName": "Post Malone",
-    }
-]
-
 
 export default function Album() {
 
     const dispatch = useDispatch();
     const [loader, setLoader] = useState(false)
+    const [flatListloader, setFlatListLoader] = useState(false)
     const albumsList = useSelector((state) => state.albumReducer.albums)
-    const getTopAlbumsFromNapster = () => {
-        const napsterurl = `https://api.napster.com/v2.2/albums/top?apikey=${api_key}&offset=20`;
-        return fetch(napsterurl)
+    const [offSet, setOffSet] = useState(20)
+    const napsterurl = `https://api.napster.com/v2.2/albums/top?apikey=${api_key}&limit=20&offset=${offSet}`;
+
+    const getTopAlbumsFromNapster = (url) => {
+
+        return fetch(url)
             .then(res => res.json())
-            .then(json => 
+            .then(json =>
                 dispatch({
                     type: 'FETCH_ALBUM_SUCCESS',
                     payload: json.albums
-                }))//setRestaurantData(json.businesses)
+                }))//fetches the data from the api and dispatches the action to the reducer
     }
+
+
 
     useEffect(() => {
         setLoader(true)
-        getTopAlbumsFromNapster();
+        getTopAlbumsFromNapster(napsterurl);
         setTimeout(() => {
             setLoader(false)
         }, 3000);
-    }, [])// this hook will execute whenever the value of the state "City" and "activeTab"is changed.
+    }, [])
 
 
+
+    const loadMore = () => {
+        setFlatListLoader(true)
+        let off_count = offSet + 20;
+        setOffSet(previousCount => previousCount + 20)
+        const modified_url = `https://api.napster.com/v2.2/albums/top?apikey=${api_key}&limit=20&offset=${off_count}`;
+        getTopAlbumsFromNapster(modified_url);
+        setTimeout(() => {
+            setFlatListLoader(false)
+        }, 3000);
+
+    }
+
+    const renderFooter = () => {
+        return (
+            flatListloader?
+            <View style={{ alignItems: 'center' }}>
+                <ActivityIndicator size="small" color="black" />
+            </View>:null
+        )
+
+
+    }
     return (
-        // flex:0 is used to make the screen full and hide the bootom of the safeareaview
-        // or we can skipp mentioning the flex property itself
-        <SafeAreaView style={{ borderRadius: 20, backgroundColor: 'white', flex: 0, paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0 }}>
-            {/* Platform.OS === "android" ? StatusBar.currentHeight : 0 = this piece of code is just to ensure that the header is not misplaced on devices with knotch */}
+        <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
             <View style={{ marginHorizontal: 10, backgroundColor: 'white', height: 150 }}>
                 <Header></Header>
             </View>
-            {/* {console.warn(albumsList[0]['name'])} */}
             <View style={{ backgroundColor: '#F0F3F4' }}>
-                <View style={{ marginHorizontal: 30, paddingVertical: 10 }}>
-                    <Text style={{ fontSize: 25, fontWeight: '700' }}>Albums </Text>
-                </View>
+                <Text style={{ fontSize: 25, fontWeight: '700', marginHorizontal: 30, paddingVertical: 10 }}>Albums </Text>
             </View>
 
-            <View style={{ height: '100%', margin: 5, alignSelf: 'center' }}>
+
+            <View style={{ flex: 1, margin: 5, alignSelf: 'center' }}>
                 {
                     loader ?
-                        
-                            <LottieView
-                                style={{ height: Dimensions.get('window').height/2 }}
-                                source={require("../assets/animations/music-spectrum.json")}
-                                autoPlay
-                                speed={1}
-                            />
-                      
+
+                        <LottieView
+                            style={{ height: Dimensions.get('window').height / 2 }}
+                            source={require("../assets/animations/music-spectrum.json")}
+                            autoPlay
+                            speed={1}
+                        />
+
 
                         :
+
                         <FlatList
                             data={albumsList}
-                            renderItem={({ item }) => <AlbumList item={item} dummy={albumsList[0]} apikey={api_key}/>}
-                            keyExtractor={item => item.artistName}
+                            renderItem={({ item }) => <AlbumList item={item} apikey={api_key} />}
+                            keyExtractor={item => item.id}
+                            onEndReached={loadMore}
+                            onEndReachedThreshold={0}
+                            ListFooterComponent={renderFooter}
                         />
+
+
                 }
 
             </View>
 
+
         </SafeAreaView>
+
+
     )
 }
 //backgroundColor: 'pink',
+
+{/* <View style={{ borderRadius: 20, backgroundColor: 'white', flex: 1, paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0 }}> */ }
+{/* Platform.OS === "android" ? StatusBar.currentHeight : 0 = this piece of code is just to ensure that the header is not misplaced on devices with knotch */ }
+
+{/* <View style={{ backgroundColor: '#F0F3F4' }}>
+    <View style={{ marginHorizontal: 30, paddingVertical: 10 }}>
+        <Text style={{ fontSize: 25, fontWeight: '700' }}>Albums </Text>
+        <Text>{albumsList.length}</Text>
+    </View>
+</View>
+
+<View style={{ margin: 5, alignSelf: 'center' }}>
+    {
+        loader ?
+            
+                <LottieView
+                    style={{ height: Dimensions.get('window').height/2 }}
+                    source={require("../assets/animations/music-spectrum.json")}
+                    autoPlay
+                    speed={1}
+                />
+          
+
+            :
+            <View style={{flex:1}}>
+                <FlatList
+                data={albumsList}
+                renderItem={({ item }) => <AlbumList item={item}  apikey={api_key}/>}
+                keyExtractor={item => item.name}
+                onEndReached={loadMore}
+                onEndReachedThreshold={0}
+                initialScrollIndex={1}
+               
+            />
+            </View>
+            
+    }
+
+</View>
+
+</View> */}

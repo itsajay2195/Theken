@@ -1,32 +1,28 @@
 let defaultState= {
     albums:[],
+    nextPage: null,
     error:false
 }
 
 let albumReducer=(state=defaultState,action)=>{
     switch(action.type){
         case 'FETCH_ALBUM_SUCCESS':{
-            let newState ={...state} 
-            newState.albums=action.payload
-
-            // if(action.payload.checkboxValue){
-            //     // console.warn("ADD TO CART")
-              
-            //     newState.selectedItems={
-            //         items:[...newState.selectedItems.items,action.payload],
-            //         restaurantName:action.payload.restaurantName
-            //         }
-            // }else{
-            //     // console.warn("REMOVE TO CART")
-            //     newState.selectedItems={
-            //         items:[...newState.selectedItems.items.filter((item)=> item.title !== action.payload.title)],
-            //         restaurantName:action.payload.restaurantName
-            //     }
-
-            // }
-            // console.warn('The sate is', newState)
-             return newState
+             //concatenate the new album with the old one. using the concat function instead of the dot operator because the dot operator will mutate the original array.
+            return {
+                ...state,
+                albums:[...(state.albums || []), ...action.payload],
+                error: false,
+              };
         }
+        
+        case 'FETCH_NEXT_PAGE_SUCCESS':{
+            //concatenate the new album with the old one. using the concat function instead of the dot operator because the dot operator will mutate the original array.
+           return {
+               ...state,
+               albums:[...state.albums,action.payload],
+               error: false,
+             };
+       }
 
         case 'FETCH_ALBUM_FAILURE':{
             let newState ={...state}

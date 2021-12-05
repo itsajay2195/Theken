@@ -12,14 +12,12 @@ export default function AlbumList({item,apikey}) {
             const productsJson = await products.json()
             setImgUrl(productsJson['images'][0]['url'])
           }
-    
           fetchProducts() //
     }, [])
 
 
     return (
         <TouchableOpacity style={{height:250,width:'100%',alignItems:'center',alignSelf:'center',backgroundColor:'white'}} >
-              {console.warn('item',item)}
             <Image source={{ uri:imgUrl}}
             style={{ height: '70%', width: '50%',borderRadius:10,marginTop:10,marginLeft:10 }}
         ></Image>
