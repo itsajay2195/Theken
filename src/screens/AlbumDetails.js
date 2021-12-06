@@ -27,7 +27,6 @@ export default function AlbumDetails(props) {
 
     return (
         <View style={styles.container}>
-            {console.warn(tracks)}
             <View style={{ flex: 1, backgroundColor: 'black' }}>
                 <Image source={{ uri: img }}
                     style={styles.albumImage}
