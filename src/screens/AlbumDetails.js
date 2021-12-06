@@ -4,7 +4,7 @@ import SongsList from '../components/albumDetails/SongsList'
 import LottieView from 'lottie-react-native'
 
 
-export default function AlbumDetails(props) {
+export default function AlbumDetails({navigation,...props}) {
     const { item, img, apikey } = props.route.params
     const [tracks, setTracks] = useState([])
     const [loader,setLoader] = useState(false)
@@ -24,7 +24,7 @@ export default function AlbumDetails(props) {
         }, 3000);
     }, [])
 
-
+    
     return (
         <View style={styles.container}>
             <View style={{ flex: 1, backgroundColor: 'black' }}>
@@ -58,7 +58,7 @@ export default function AlbumDetails(props) {
                     <FlatList
                         data={tracks}
                         showsVerticalScrollIndicator={false}
-                        renderItem={({ item }) => <SongsList item={item} apikey={apikey} />}
+                        renderItem={({ item }) => <SongsList item={item} apikey={apikey} navigation={navigation} allTracks={tracks}/>}
                         keyExtractor={item => item.id}
                     />
             }

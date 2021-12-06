@@ -32,7 +32,20 @@ export default function RootNavigation() {
                             title: '', headerBackImage: () => <MaterialCommunityIcons name="arrow-left" size={25} color="white" />,
                             headerBackTitleVisible: false
                         }} />
-                    <Stack.Screen name='Music' component={Music} options={{ title: '' }} />
+                    <Stack.Screen 
+                        name='Music' 
+                        component={Music} 
+                        screenOptions={screenOptions}
+                        options={{
+                            title: 'Now Playing', 
+                            headerTintColor: 'white',
+                            headerTitleStyle: {
+                                fontWeight: 'bold',
+                                fontSize:20,
+                              },
+                            headerBackImage: () => <MaterialCommunityIcons name="arrow-left" size={25} color="white" />,
+                            headerBackTitleVisible: false
+                        }}  />
                 </Stack.Navigator>
             </NavigationContainer>
         </Provider>

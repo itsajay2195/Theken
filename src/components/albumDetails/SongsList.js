@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity } from 'react-native'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { Audio } from 'expo-av'
 
-export default function SongsList({ item }) {
+export default function SongsList({ item,navigation,apikey,allTracks }) {
     const [isPlaying, setIsPlaying] = useState(false)
     const [status, setStatus] = useState(null)
     const [playbackObject, setPlaybackObject] = useState(null)
@@ -42,10 +42,20 @@ export default function SongsList({ item }) {
         }
 
     }
+
+    const navigateToMusicScreen =async ()=>{
+        navigation.navigate("Music",{item:item,apikey:apikey,allTracks:allTracks})
+        const status = await setPlaybackObject(playbackObject.setStatusAsync({ shouldPlay: false }))
+        setStatus(status)
+        setIsPlaying(!isPlaying)
+        setPlaybackObject(null)
+        
+
+    }
     return (
-        <TouchableOpacity style={{ marginBottom: 20, flexDirection: 'row', justifyContent: 'space-between' }}>
+        <TouchableOpacity onPress={()=>navigateToMusicScreen()} style={{ marginBottom: 20, flexDirection: 'row', justifyContent: 'space-between' }}>
             <View style={{ flexDirection: 'row' }}>
-                <TouchableOpacity onPress={() => playSong(item.playSong)} style={{ borderWidth: 1, borderRadius: 20, justifyContent: 'center', alignItems: 'center' }}>
+                <TouchableOpacity onPress={() => playSong(item.previewURL)} style={{ borderWidth: 1, borderRadius: 20, justifyContent: 'center', alignItems: 'center' }}>
                     <MaterialCommunityIcons name={isPlaying ? "pause" : "play"} size={40} color="black" />
                 </TouchableOpacity>
 
@@ -64,12 +74,7 @@ export default function SongsList({ item }) {
                 <TouchableOpacity>
                     <MaterialCommunityIcons name="heart-outline" size={25} color="black" />
                 </TouchableOpacity>
-
             </View>
-
-
-
-
         </TouchableOpacity>
     )
 }
