@@ -58,7 +58,7 @@ export default function AlbumDetails({navigation,...props}) {
                     <FlatList
                         data={tracks}
                         showsVerticalScrollIndicator={false}
-                        renderItem={({ item }) => <SongsList item={item} apikey={apikey} navigation={navigation} allTracks={tracks}/>}
+                        renderItem={({ item }) => <SongsList item={item} apikey={apikey} navigation={navigation} allTracks={tracks} img={img}/>}
                         keyExtractor={item => item.id}
                     />
             }

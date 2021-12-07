@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity } from 'react-native'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { Audio } from 'expo-av'
 
-export default function SongsList({ item,navigation,apikey,allTracks }) {
+export default function SongsList({ item,navigation,apikey,allTracks,img }) {
     const [isPlaying, setIsPlaying] = useState(false)
     const [status, setStatus] = useState(null)
     const [playbackObject, setPlaybackObject] = useState(null)
@@ -44,7 +44,7 @@ export default function SongsList({ item,navigation,apikey,allTracks }) {
     }
 
     const navigateToMusicScreen =async ()=>{
-        navigation.navigate("Music",{item:item,apikey:apikey,allTracks:allTracks})
+        navigation.navigate("Music",{item:item,apikey:apikey,allTracks:allTracks,img:img})
         const status = await setPlaybackObject(playbackObject.setStatusAsync({ shouldPlay: false }))
         setStatus(status)
         setIsPlaying(!isPlaying)

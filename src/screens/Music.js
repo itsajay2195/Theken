@@ -49,7 +49,7 @@ const togglePlayback = async (playbackState) => {
 
 export default function Music({navigation,...props}) {
     
-    const { item, allTracks } = props.route.params;
+    const { item, allTracks, img } = props.route.params;
     const playbackState = usePlaybackState();
     const progress = useProgress();
     const [index, setIndex] = useState(props.route.params.item.index-1);
@@ -85,7 +85,6 @@ export default function Music({navigation,...props}) {
     const reset = async () => {
         await TrackPlayer.stop();
         navigation.navigate('Album')
-        await TrackPlayer.setupPlayer();
     }
 
     useEffect(() => {
@@ -97,15 +96,14 @@ export default function Music({navigation,...props}) {
     return (
 
         <View style={styles.container}>
-
-           
             <SafeAreaView style={{ flex: 1, backgroundColor: 'black' }}>
+                {console.warn(img)}
                 <View style={{flexDirection:'row',justifyContent:'space-between'}}>
                     <MaterialCommunityIcons onPress={()=>reset()} name="arrow-left" size={25} color="white" />
                     <Text style={{color:'white', fontSize:20, fontWeight:'700'}}>Now Playing</Text>
                     <Text style={{color:'white'}}></Text>
                 </View>
-                    <Image source={{ uri: 'https://upload.wikimedia.org/wikipedia/en/7/72/Stoneyalbum.jpg' }}
+                    <Image source={{ uri: img }}
                         style={styles.albumImage}
                     ></Image>
             </SafeAreaView>
