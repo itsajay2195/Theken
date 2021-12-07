@@ -1,0 +1,19 @@
+{
+  "expo": {
+    "name": "assignment",
+    "slug": "assignment",
+    "version": "1.0.0",
+    "sdkVersion": "43.0.0",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "android": {
+      "package": "com.ajaycnv.assignment"
+    },
+    "ios": {
+      "bundleIdentifier": "com.ajaycnv.assignment"
+    }
+  }
+}

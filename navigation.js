@@ -37,14 +37,17 @@ export default function RootNavigation() {
                         component={Music} 
                         screenOptions={screenOptions}
                         options={{
-                            title: 'Now Playing', 
+                            headerShown: false,
+                            headerLeft:null,
                             headerTintColor: 'white',
                             headerTitleStyle: {
                                 fontWeight: 'bold',
                                 fontSize:20,
                               },
-                            headerBackImage: () => <MaterialCommunityIcons name="arrow-left" size={25} color="white" />,
-                            headerBackTitleVisible: false
+                            // headerBackImage: () => <MaterialCommunityIcons name="arrow-left" size={25} color="white" />,
+                            headerBackTitleVisible: false,
+                            gestureEnabled:false
+                            
                         }}  />
                 </Stack.Navigator>
             </NavigationContainer>
