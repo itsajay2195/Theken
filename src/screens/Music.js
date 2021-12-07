@@ -97,7 +97,6 @@ export default function Music({navigation,...props}) {
 
         <View style={styles.container}>
             <SafeAreaView style={{ flex: 1, backgroundColor: 'black' }}>
-                {console.warn(img)}
                 <View style={{flexDirection:'row',justifyContent:'space-between'}}>
                     <MaterialCommunityIcons onPress={()=>reset()} name="arrow-left" size={25} color="white" />
                     <Text style={{color:'white', fontSize:20, fontWeight:'700'}}>Now Playing</Text>
